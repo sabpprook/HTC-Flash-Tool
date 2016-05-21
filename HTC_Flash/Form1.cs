@@ -148,6 +148,8 @@ namespace HTC_Flash
                     tmp = sr.ReadLine();
                     if (tmp.Contains("[ro.build.product]:"))
                         product = tmp.Replace("[ro.build.product]: ", "").Replace("[", "").Replace("]", "");
+                    if (tmp.Contains("[ro.product.device]:"))
+                        product = tmp.Replace("[ro.product.device]: ", "").Replace("[", "").Replace("]", "");
                     if (tmp.Contains("[ro.product.version]:"))
                         version = tmp.Replace("[ro.product.version]: ", "").Replace("[", "").Replace("]", "");
                     if (tmp.Contains("[ro.mid]:"))
@@ -252,6 +254,7 @@ namespace HTC_Flash
             {
                 StreamReader sr = fastboot("-s " + DeviceSN + " oem get_identifier_token");
                 string tmp, token="";
+                Clipboard.Clear();
                 while(!sr.EndOfStream)
                 {
                     tmp = sr.ReadLine().Replace("(bootloader) ", "");
@@ -267,14 +270,14 @@ namespace HTC_Flash
                         {
                             tmp = sr.ReadLine().Replace("(bootloader) ", "");
                             if (String.IsNullOrEmpty(tmp))
-                                tmp = "\r";
+                                tmp = "\n";
                             token += tmp;
                         }
                     }
                 }
                 if (!String.IsNullOrEmpty(token))
                 {
-                    Clipboard.SetText(token);
+                    Clipboard.SetText(token, TextDataFormat.Text);
                     richTextBox1.Text = token;
                 }
             }
