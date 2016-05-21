@@ -60,10 +60,15 @@
             this.button1 = new System.Windows.Forms.Button();
             this.linkLabel1 = new System.Windows.Forms.LinkLabel();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
+            this.groupBox4 = new System.Windows.Forms.GroupBox();
+            this.btn_flashToken = new System.Windows.Forms.Button();
+            this.btn_getToken = new System.Windows.Forms.Button();
+            this.commandText = new System.Windows.Forms.TextBox();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
+            this.groupBox4.SuspendLayout();
             this.SuspendLayout();
             // 
             // dataGridView1
@@ -308,7 +313,7 @@
             this.groupBox3.Controls.Add(this.btn_FlashZip);
             this.groupBox3.Controls.Add(this.btn_FlashRecovery);
             this.groupBox3.Controls.Add(this.btn_FlashBoot);
-            this.groupBox3.Location = new System.Drawing.Point(234, 86);
+            this.groupBox3.Location = new System.Drawing.Point(234, 166);
             this.groupBox3.Name = "groupBox3";
             this.groupBox3.Size = new System.Drawing.Size(99, 177);
             this.groupBox3.TabIndex = 3;
@@ -376,9 +381,9 @@
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(234, 282);
+            this.button1.Location = new System.Drawing.Point(563, 353);
             this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(99, 34);
+            this.button1.Size = new System.Drawing.Size(99, 25);
             this.button1.TabIndex = 5;
             this.button1.Text = "My Facebook";
             this.button1.UseVisualStyleBackColor = true;
@@ -387,7 +392,7 @@
             // linkLabel1
             // 
             this.linkLabel1.AutoSize = true;
-            this.linkLabel1.Location = new System.Drawing.Point(253, 329);
+            this.linkLabel1.Location = new System.Drawing.Point(495, 363);
             this.linkLabel1.Name = "linkLabel1";
             this.linkLabel1.Size = new System.Drawing.Size(61, 12);
             this.linkLabel1.TabIndex = 6;
@@ -395,11 +400,60 @@
             this.linkLabel1.Text = "HTC Driver";
             this.linkLabel1.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel1_LinkClicked);
             // 
+            // groupBox4
+            // 
+            this.groupBox4.Controls.Add(this.btn_flashToken);
+            this.groupBox4.Controls.Add(this.btn_getToken);
+            this.groupBox4.Location = new System.Drawing.Point(234, 75);
+            this.groupBox4.Name = "groupBox4";
+            this.groupBox4.Size = new System.Drawing.Size(99, 85);
+            this.groupBox4.TabIndex = 7;
+            this.groupBox4.TabStop = false;
+            this.groupBox4.Text = "Unlock Token";
+            // 
+            // btn_flashToken
+            // 
+            this.btn_flashToken.Enabled = false;
+            this.btn_flashToken.Location = new System.Drawing.Point(14, 50);
+            this.btn_flashToken.Name = "btn_flashToken";
+            this.btn_flashToken.Size = new System.Drawing.Size(75, 23);
+            this.btn_flashToken.TabIndex = 2;
+            this.btn_flashToken.TabStop = false;
+            this.btn_flashToken.Text = "Flash";
+            this.btn_flashToken.UseVisualStyleBackColor = true;
+            this.btn_flashToken.Click += new System.EventHandler(this.btn_flashToken_Click);
+            // 
+            // btn_getToken
+            // 
+            this.btn_getToken.Enabled = false;
+            this.btn_getToken.Location = new System.Drawing.Point(14, 21);
+            this.btn_getToken.Name = "btn_getToken";
+            this.btn_getToken.Size = new System.Drawing.Size(75, 23);
+            this.btn_getToken.TabIndex = 1;
+            this.btn_getToken.TabStop = false;
+            this.btn_getToken.Text = "Get";
+            this.btn_getToken.UseVisualStyleBackColor = true;
+            this.btn_getToken.Click += new System.EventHandler(this.btn_getToken_Click);
+            // 
+            // commandText
+            // 
+            this.commandText.AllowDrop = true;
+            this.commandText.Location = new System.Drawing.Point(12, 356);
+            this.commandText.Name = "commandText";
+            this.commandText.Size = new System.Drawing.Size(472, 22);
+            this.commandText.TabIndex = 8;
+            this.commandText.TabStop = false;
+            this.commandText.DragDrop += new System.Windows.Forms.DragEventHandler(this.commandText_DragDrop);
+            this.commandText.DragEnter += new System.Windows.Forms.DragEventHandler(this.commandText_DragEnter);
+            this.commandText.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.commandText_KeyPress);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(674, 361);
+            this.ClientSize = new System.Drawing.Size(674, 391);
+            this.Controls.Add(this.commandText);
+            this.Controls.Add(this.groupBox4);
             this.Controls.Add(this.linkLabel1);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.richTextBox1);
@@ -417,6 +471,7 @@
             this.groupBox1.PerformLayout();
             this.groupBox2.ResumeLayout(false);
             this.groupBox3.ResumeLayout(false);
+            this.groupBox4.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -455,6 +510,10 @@
         private System.Windows.Forms.Button btn_FlashSystem;
         private System.Windows.Forms.OpenFileDialog openFileDialog1;
         public System.Windows.Forms.RichTextBox richTextBox1;
+        private System.Windows.Forms.GroupBox groupBox4;
+        private System.Windows.Forms.Button btn_flashToken;
+        private System.Windows.Forms.Button btn_getToken;
+        private System.Windows.Forms.TextBox commandText;
     }
 }
 

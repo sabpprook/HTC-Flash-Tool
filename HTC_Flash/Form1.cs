@@ -179,6 +179,8 @@ namespace HTC_Flash
             btn_FlashRecovery.Enabled = false;
             btn_FlashSystem.Enabled = false;
             btn_FlashZip.Enabled = false;
+            btn_getToken.Enabled = false;
+            btn_flashToken.Enabled = false;
 
             if (DeviceMode.Equals("fastboot") || DeviceMode.Equals("download") || DeviceMode.Equals("ruu") || DeviceMode.Equals("adb") || DeviceMode.Equals("recovery"))
             {
@@ -193,6 +195,9 @@ namespace HTC_Flash
             }
             else if (DeviceMode.Equals("fastboot") || DeviceMode.Equals("download"))
             {
+
+                btn_getToken.Enabled = true;
+                btn_flashToken.Enabled = true;
                 btn_FlashBoot.Enabled = true;
                 btn_FlashRecovery.Enabled = true;
                 btn_FlashSystem.Enabled = true;
@@ -239,6 +244,51 @@ namespace HTC_Flash
                 fastboot("-s " + DeviceSN + " reboot");
             else if (DeviceMode.Equals("adb") || DeviceMode.Equals("recovery"))
                 adb("-s " + DeviceSN + " reboot");
+        }
+
+        private void btn_getToken_Click(object sender, EventArgs e)
+        {
+            if (DeviceMode.Equals("fastboot") || DeviceMode.Equals("download"))
+            {
+                StreamReader sr = fastboot("-s " + DeviceSN + " oem get_identifier_token");
+                string tmp, token="";
+                while(!sr.EndOfStream)
+                {
+                    tmp = sr.ReadLine().Replace("(bootloader) ", "");
+                    if (tmp.Contains("disable unlock"))
+                    {
+                        MessageBox.Show(this, "裝置不允許解鎖，請先允許oem解鎖");
+                        break;
+                    }
+                    if (tmp.Contains("Identifier Token Start"))
+                    {
+                        token += tmp;
+                        while(!tmp.Contains("Identifier Token End"))
+                        {
+                            tmp = sr.ReadLine().Replace("(bootloader) ", "");
+                            if (String.IsNullOrEmpty(tmp))
+                                tmp = "\r";
+                            token += tmp;
+                        }
+                    }
+                }
+                if (!String.IsNullOrEmpty(token))
+                {
+                    Clipboard.SetText(token);
+                    richTextBox1.Text = token;
+                }
+            }
+        }
+
+        private void btn_flashToken_Click(object sender, EventArgs e)
+        {
+            openFileDialog1.Filter = "Unlock Token|*.bin|All Files|*.*";
+            if (openFileDialog1.ShowDialog() == DialogResult.OK)
+            {
+                richTextBox1.ResetText();
+                Thread th = new Thread(() => fastboot2("-s " + DeviceSN + " flash unlocktoken " + openFileDialog1.FileName));
+                th.Start();
+            }
         }
 
         private void btn_FlashBoot_Click(object sender, EventArgs e)
@@ -308,14 +358,55 @@ namespace HTC_Flash
             }
         }
 
-        private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        public List<string> getAdbDevices()
         {
-            Process.Start("https://drive.google.com/open?id=0B9_zSyS3dIRpa1VzQk0yNUdXd2M");
+            List<string> devices = new List<string>();
+            string tmp;
+            StreamReader sr = adb("devices");
+            while (!sr.EndOfStream)
+            {
+                tmp = sr.ReadLine();
+                if (tmp.Contains("\tdevice"))
+                {
+                    devices.Add(tmp.Replace("\tdevice", ""));
+                    devices.Add("adb");
+                }
+                else if (tmp.Contains("\trecovery"))
+                {
+                    devices.Add(tmp.Replace("\trecovery", ""));
+                    devices.Add("recovery");
+                }
+                else if (tmp.Contains("\tsideload"))
+                {
+                    devices.Add(tmp.Replace("\tsideload", ""));
+                    devices.Add("sideload");
+                }
+            }
+            return devices;
+        }
+        public StreamReader adb(string parameters)
+        {
+            Process p = new Process();
+            p.StartInfo = psi;
+            p.StartInfo.FileName = "adb.exe";
+            p.StartInfo.Arguments = parameters;
+            p.Start();
+            StreamReader sr = p.StandardOutput;
+            p.Close();
+            return sr;
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        public void adb2(string parameters)
         {
-            Process.Start("https://www.facebook.com/profile.php?id=100005653172695");
+            Process p = new Process();
+            p.StartInfo = psi;
+            p.StartInfo.FileName = "adb.exe";
+            p.StartInfo.Arguments = parameters;
+            p.OutputDataReceived += OutputDataReceived;
+            p.ErrorDataReceived += ErrorDataReceived;
+            p.Start();
+            p.BeginOutputReadLine();
+            p.BeginErrorReadLine();
         }
 
         public List<string> getFastbootDevices()
@@ -387,71 +478,8 @@ namespace HTC_Flash
                 UpdateText(e.Data);
         }
 
-        public List<string> getAdbDevices()
-        {
-            List<string> devices = new List<string>();
-            string tmp;
-            StreamReader sr = adb("devices");
-            while (!sr.EndOfStream)
-            {
-                tmp = sr.ReadLine();
-                if (tmp.Contains("\tdevice"))
-                {
-                    devices.Add(tmp.Replace("\tdevice", ""));
-                    devices.Add("adb");
-                }
-                else if (tmp.Contains("\trecovery"))
-                {
-                    devices.Add(tmp.Replace("\trecovery", ""));
-                    devices.Add("recovery");
-                }
-                else if (tmp.Contains("\tsideload"))
-                {
-                    devices.Add(tmp.Replace("\tsideload", ""));
-                    devices.Add("sideload");
-                }
-            }
-            return devices;
-        }
-
-        public StreamReader adb(string parameters)
-        {
-            Process p = new Process();
-            p.StartInfo = psi;
-            p.StartInfo.FileName = "adb.exe";
-            p.StartInfo.Arguments = parameters;
-            p.Start();
-            StreamReader sr = p.StandardOutput;
-            p.Close();
-            return sr;
-        }
-
-        public void adb2(string parameters)
-        {
-            Process p = new Process();
-            p.StartInfo = psi;
-            p.StartInfo.FileName = "adb.exe";
-            p.StartInfo.Arguments = parameters;
-            p.OutputDataReceived += OutputDataReceived;
-            p.Start();
-            p.BeginOutputReadLine();
-        }
-
-        delegate void UpdateTextCallback(string text);
-
         private void UpdateText(string text)
         {
-            /*if (richTextBox1.InvokeRequired)
-            {
-                UpdateTextCallback d = new UpdateTextCallback(UpdateText);
-                Invoke(d, new object[] { text });
-            }
-            else
-            {
-                richTextBox1.AppendText(text + "\n");
-                richTextBox1.SelectionStart = richTextBox1.Text.Length;
-                richTextBox1.ScrollToCaret();
-            }*/
             Action act = () =>
                 {
                     if (string.IsNullOrEmpty(text) == false)
@@ -462,6 +490,51 @@ namespace HTC_Flash
                     }
                 };
             BeginInvoke(act);
+        }
+
+        private void commandText_DragEnter(object sender, DragEventArgs e)
+        {
+            if (e.Data.GetDataPresent(DataFormats.FileDrop))
+                e.Effect = DragDropEffects.Move;
+            else
+                e.Effect = DragDropEffects.None;
+        }
+
+        private void commandText_DragDrop(object sender, DragEventArgs e)
+        {
+            commandText.Text += "\"" + ((System.Array)e.Data.GetData(DataFormats.FileDrop)).GetValue(0).ToString() + "\" ";
+            commandText.SelectionStart = commandText.Text.Length;
+        }
+
+        private void commandText_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (e.KeyChar == 13)
+            {
+                string command = commandText.Text;
+                if (command.Contains("fastboot"))
+                {
+                    command = command.Replace("fastboot ", "");
+                    command = "-s " + DeviceSN + " " + command;
+                    fastboot2(command);
+                }
+                else if (command.Contains("adb"))
+                {
+                    command = command.Replace("adb ", "");
+                    command = "-s " + DeviceSN + " " + command;
+                    adb2(command);
+                }
+                commandText.Clear();
+            }
+        }
+
+        private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            Process.Start("https://drive.google.com/open?id=0B9_zSyS3dIRpa1VzQk0yNUdXd2M");
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            Process.Start("https://www.facebook.com/profile.php?id=100005653172695");
         }
 
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
