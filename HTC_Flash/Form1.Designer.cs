@@ -218,6 +218,7 @@
             // 
             // updateDevices
             // 
+            this.updateDevices.WorkerSupportsCancellation = true;
             this.updateDevices.DoWork += new System.ComponentModel.DoWorkEventHandler(this.updateDevices_DoWork);
             this.updateDevices.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.updateDevices_RunWorkerCompleted);
             // 

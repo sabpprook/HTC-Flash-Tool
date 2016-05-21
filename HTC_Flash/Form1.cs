@@ -17,6 +17,7 @@ namespace HTC_Flash
     {
         List<string> Devices = new List<string>();
         string DeviceSN = "", DeviceMode = "";
+        ProcessStartInfo psi = new ProcessStartInfo();
 
         public Form1()
         {
@@ -28,6 +29,12 @@ namespace HTC_Flash
         {
             releaseData();
             updateTimer.Start();
+            psi.CreateNoWindow = true;
+            psi.RedirectStandardOutput = true;
+            psi.RedirectStandardError = true;
+            psi.UseShellExecute = false;
+            psi.WorkingDirectory = Application.StartupPath;
+            psi.Verb = "runas";
         }
 
         private void releaseData()
@@ -331,13 +338,9 @@ namespace HTC_Flash
         public StreamReader fastboot(string parameters)
         {
             Process p = new Process();
+            p.StartInfo = psi;
             p.StartInfo.FileName = "fastboot.exe";
             p.StartInfo.Arguments = parameters;
-            p.StartInfo.CreateNoWindow = true;
-            p.StartInfo.RedirectStandardOutput = true;
-            p.StartInfo.RedirectStandardError = true;
-            p.StartInfo.UseShellExecute = false;
-            p.StartInfo.WorkingDirectory = Application.StartupPath;
             p.Start();
             StreamReader sr;
             if (p.StandardError.EndOfStream)
@@ -351,32 +354,20 @@ namespace HTC_Flash
         public void fastboot2(string parameters)
         {
             Process p = new Process();
+            p.StartInfo = psi;
             p.StartInfo.FileName = "fastboot.exe";
             p.StartInfo.Arguments = parameters;
-            p.StartInfo.CreateNoWindow = true;
-            p.StartInfo.RedirectStandardOutput = true;
-            p.StartInfo.RedirectStandardError = true;
-            p.StartInfo.UseShellExecute = false;
-            p.StartInfo.WorkingDirectory = Application.StartupPath;
-            //p.OutputDataReceived += OutputDataReceived;
             p.ErrorDataReceived += ErrorDataReceived;
             p.Start();
-            //p.BeginOutputReadLine();
             p.BeginErrorReadLine();
-
         }
 
         public void mfastboot(string parameters)
         {
             Process p = new Process();
+            p.StartInfo = psi;
             p.StartInfo.FileName = "mfastboot.exe";
             p.StartInfo.Arguments = parameters;
-            p.StartInfo.CreateNoWindow = true;
-            p.StartInfo.RedirectStandardOutput = true;
-            p.StartInfo.RedirectStandardError = true;
-            p.StartInfo.UseShellExecute = false;
-            p.StartInfo.WorkingDirectory = Application.StartupPath;
-            p.Start();
             p.OutputDataReceived += OutputDataReceived;
             p.ErrorDataReceived += ErrorDataReceived;
             p.Start();
@@ -386,13 +377,13 @@ namespace HTC_Flash
 
         private void OutputDataReceived(object sender, DataReceivedEventArgs e)
         {
-            if (!(e.Data == null))
+            if (!String.IsNullOrEmpty(e.Data))
                 UpdateText(e.Data);
         }
 
         private void ErrorDataReceived(object sender, DataReceivedEventArgs e)
         {
-            if (!(e.Data == null))
+            if (!String.IsNullOrEmpty(e.Data) && !e.Data.Contains("htc_fastboot"))
                 UpdateText(e.Data);
         }
 
@@ -426,13 +417,9 @@ namespace HTC_Flash
         public StreamReader adb(string parameters)
         {
             Process p = new Process();
+            p.StartInfo = psi;
             p.StartInfo.FileName = "adb.exe";
             p.StartInfo.Arguments = parameters;
-            p.StartInfo.CreateNoWindow = true;
-            p.StartInfo.RedirectStandardOutput = true;
-            p.StartInfo.RedirectStandardError = true;
-            p.StartInfo.UseShellExecute = false;
-            p.StartInfo.WorkingDirectory = Application.StartupPath;
             p.Start();
             StreamReader sr = p.StandardOutput;
             p.Close();
@@ -442,13 +429,9 @@ namespace HTC_Flash
         public void adb2(string parameters)
         {
             Process p = new Process();
+            p.StartInfo = psi;
             p.StartInfo.FileName = "adb.exe";
             p.StartInfo.Arguments = parameters;
-            p.StartInfo.CreateNoWindow = true;
-            p.StartInfo.RedirectStandardOutput = true;
-            p.StartInfo.RedirectStandardError = true;
-            p.StartInfo.UseShellExecute = false;
-            p.StartInfo.WorkingDirectory = Application.StartupPath;
             p.OutputDataReceived += OutputDataReceived;
             p.Start();
             p.BeginOutputReadLine();
@@ -458,7 +441,7 @@ namespace HTC_Flash
 
         private void UpdateText(string text)
         {
-            if (richTextBox1.InvokeRequired)
+            /*if (richTextBox1.InvokeRequired)
             {
                 UpdateTextCallback d = new UpdateTextCallback(UpdateText);
                 Invoke(d, new object[] { text });
@@ -468,13 +451,29 @@ namespace HTC_Flash
                 richTextBox1.AppendText(text + "\n");
                 richTextBox1.SelectionStart = richTextBox1.Text.Length;
                 richTextBox1.ScrollToCaret();
-            }
+            }*/
+            Action act = () =>
+                {
+                    if (string.IsNullOrEmpty(text) == false)
+                    {
+                        richTextBox1.AppendText(text + '\n');
+                        richTextBox1.SelectionStart = richTextBox1.Text.Length;
+                        richTextBox1.ScrollToCaret();
+                    }
+                };
+            BeginInvoke(act);
         }
 
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
-            adb("kill-server");
-            Thread.Sleep(200);
+            updateDevices.CancelAsync();
+            updateTimer.Stop();
+            Process p = new Process();
+            p.StartInfo = psi;
+            p.StartInfo.FileName = "TASKKILL";
+            p.StartInfo.Arguments = "/IM adb.exe /F";
+            p.Start();
+            Thread.Sleep(1000);
             File.Delete("adb.exe");
             File.Delete("AdbWinApi.dll");
             File.Delete("fastboot.exe");
