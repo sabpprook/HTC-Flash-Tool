@@ -265,20 +265,19 @@ namespace HTC_Flash
                     }
                     if (tmp.Contains("Identifier Token Start"))
                     {
-                        token += tmp;
+                        token = token + tmp + "\r\n";
                         while(!tmp.Contains("Identifier Token End"))
                         {
                             tmp = sr.ReadLine().Replace("(bootloader) ", "");
-                            if (String.IsNullOrEmpty(tmp))
-                                tmp = "\n";
-                            token += tmp;
+                            if (!String.IsNullOrEmpty(tmp))
+                                token = token + tmp + "\r\n";
                         }
                     }
                 }
                 if (!String.IsNullOrEmpty(token))
                 {
                     Clipboard.SetText(token, TextDataFormat.Text);
-                    richTextBox1.Text = token;
+                    textBox1.Text = token;
                 }
             }
         }
@@ -288,7 +287,7 @@ namespace HTC_Flash
             openFileDialog1.Filter = "Unlock Token|*.bin|All Files|*.*";
             if (openFileDialog1.ShowDialog() == DialogResult.OK)
             {
-                richTextBox1.ResetText();
+                textBox1.ResetText();
                 Thread th = new Thread(() => fastboot2("-s " + DeviceSN + " flash unlocktoken " + openFileDialog1.FileName));
                 th.Start();
             }
@@ -299,7 +298,7 @@ namespace HTC_Flash
             openFileDialog1.Filter = "Raw Image|*.img|All Files|*.*";
             if (openFileDialog1.ShowDialog() == DialogResult.OK)
             {
-                richTextBox1.ResetText();
+                textBox1.ResetText();
                 Thread th = new Thread(() => fastboot2("-s " + DeviceSN + " flash boot " + openFileDialog1.FileName));
                 th.Start();
             }
@@ -310,7 +309,7 @@ namespace HTC_Flash
             openFileDialog1.Filter = "Raw Image|*.img|All Files|*.*";
             if (openFileDialog1.ShowDialog() == DialogResult.OK)
             {
-                richTextBox1.ResetText();
+                textBox1.ResetText();
                 Thread th = new Thread(() => fastboot2("-s " + DeviceSN + " flash recovery " + openFileDialog1.FileName));
                 th.Start();
             }
@@ -321,7 +320,7 @@ namespace HTC_Flash
             openFileDialog1.Filter = "Raw Image|*.img|All Files|*.*";
             if (openFileDialog1.ShowDialog() == DialogResult.OK)
             {
-                richTextBox1.ResetText();
+                textBox1.ResetText();
                 if (DeviceMode.Equals("download"))
                 {
                     Thread th = new Thread(() => fastboot2("-s " + DeviceSN + " flash system " + openFileDialog1.FileName));
@@ -340,7 +339,7 @@ namespace HTC_Flash
             openFileDialog1.Filter = "Zip files|*.zip|All files|*.*";
             if (openFileDialog1.ShowDialog() == DialogResult.OK)
             {
-                richTextBox1.ResetText();
+                textBox1.ResetText();
                 if (DeviceMode.Equals("ruu") || DeviceMode.Equals("sideload"))
                 {
                     if (DeviceMode.Equals("ruu"))
@@ -459,14 +458,11 @@ namespace HTC_Flash
         public void mfastboot(string parameters)
         {
             Process p = new Process();
-            p.StartInfo = psi;
             p.StartInfo.FileName = "mfastboot.exe";
             p.StartInfo.Arguments = parameters;
-            p.OutputDataReceived += OutputDataReceived;
-            p.ErrorDataReceived += ErrorDataReceived;
+            p.StartInfo.UseShellExecute = true;
+            p.StartInfo.WorkingDirectory = Application.StartupPath;
             p.Start();
-            p.BeginOutputReadLine();
-            p.BeginErrorReadLine();
         }
 
         private void OutputDataReceived(object sender, DataReceivedEventArgs e)
@@ -487,9 +483,9 @@ namespace HTC_Flash
                 {
                     if (string.IsNullOrEmpty(text) == false)
                     {
-                        richTextBox1.AppendText(text + '\n');
-                        richTextBox1.SelectionStart = richTextBox1.Text.Length;
-                        richTextBox1.ScrollToCaret();
+                        textBox1.AppendText(text + "\r\n");
+                        textBox1.SelectionStart = textBox1.Text.Length;
+                        textBox1.ScrollToCaret();
                     }
                 };
             BeginInvoke(act);

@@ -56,7 +56,6 @@
             this.btn_FlashZip = new System.Windows.Forms.Button();
             this.btn_FlashRecovery = new System.Windows.Forms.Button();
             this.btn_FlashBoot = new System.Windows.Forms.Button();
-            this.richTextBox1 = new System.Windows.Forms.RichTextBox();
             this.button1 = new System.Windows.Forms.Button();
             this.linkLabel1 = new System.Windows.Forms.LinkLabel();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
@@ -64,6 +63,7 @@
             this.btn_flashToken = new System.Windows.Forms.Button();
             this.btn_getToken = new System.Windows.Forms.Button();
             this.commandText = new System.Windows.Forms.TextBox();
+            this.textBox1 = new System.Windows.Forms.TextBox();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
@@ -368,31 +368,20 @@
             this.btn_FlashBoot.UseVisualStyleBackColor = true;
             this.btn_FlashBoot.Click += new System.EventHandler(this.btn_FlashBoot_Click);
             // 
-            // richTextBox1
-            // 
-            this.richTextBox1.Location = new System.Drawing.Point(353, 86);
-            this.richTextBox1.Name = "richTextBox1";
-            this.richTextBox1.ReadOnly = true;
-            this.richTextBox1.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.ForcedVertical;
-            this.richTextBox1.Size = new System.Drawing.Size(310, 257);
-            this.richTextBox1.TabIndex = 4;
-            this.richTextBox1.TabStop = false;
-            this.richTextBox1.Text = "";
-            // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(563, 353);
+            this.button1.Location = new System.Drawing.Point(578, 356);
             this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(99, 25);
+            this.button1.Size = new System.Drawing.Size(85, 25);
             this.button1.TabIndex = 5;
-            this.button1.Text = "My Facebook";
+            this.button1.Text = "Author";
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
             // linkLabel1
             // 
             this.linkLabel1.AutoSize = true;
-            this.linkLabel1.Location = new System.Drawing.Point(495, 363);
+            this.linkLabel1.Location = new System.Drawing.Point(501, 363);
             this.linkLabel1.Name = "linkLabel1";
             this.linkLabel1.Size = new System.Drawing.Size(61, 12);
             this.linkLabel1.TabIndex = 6;
@@ -447,16 +436,31 @@
             this.commandText.DragEnter += new System.Windows.Forms.DragEventHandler(this.commandText_DragEnter);
             this.commandText.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.commandText_KeyPress);
             // 
+            // textBox1
+            // 
+            this.textBox1.BackColor = System.Drawing.Color.Black;
+            this.textBox1.Font = new System.Drawing.Font("細明體", 10F);
+            this.textBox1.ForeColor = System.Drawing.Color.Lime;
+            this.textBox1.Location = new System.Drawing.Point(351, 75);
+            this.textBox1.Multiline = true;
+            this.textBox1.Name = "textBox1";
+            this.textBox1.ReadOnly = true;
+            this.textBox1.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.textBox1.Size = new System.Drawing.Size(311, 268);
+            this.textBox1.TabIndex = 9;
+            this.textBox1.TabStop = false;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.BackColor = System.Drawing.SystemColors.Control;
             this.ClientSize = new System.Drawing.Size(674, 391);
+            this.Controls.Add(this.textBox1);
             this.Controls.Add(this.commandText);
             this.Controls.Add(this.groupBox4);
             this.Controls.Add(this.linkLabel1);
             this.Controls.Add(this.button1);
-            this.Controls.Add(this.richTextBox1);
             this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);
@@ -509,11 +513,11 @@
         private System.Windows.Forms.LinkLabel linkLabel1;
         private System.Windows.Forms.Button btn_FlashSystem;
         private System.Windows.Forms.OpenFileDialog openFileDialog1;
-        public System.Windows.Forms.RichTextBox richTextBox1;
         private System.Windows.Forms.GroupBox groupBox4;
         private System.Windows.Forms.Button btn_flashToken;
         private System.Windows.Forms.Button btn_getToken;
         private System.Windows.Forms.TextBox commandText;
+        private System.Windows.Forms.TextBox textBox1;
     }
 }
 
