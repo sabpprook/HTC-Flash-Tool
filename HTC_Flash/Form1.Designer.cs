@@ -449,6 +449,7 @@
             this.textBox1.Size = new System.Drawing.Size(311, 268);
             this.textBox1.TabIndex = 9;
             this.textBox1.TabStop = false;
+            this.textBox1.Text = resources.GetString("textBox1.Text");
             // 
             // Form1
             // 
@@ -471,7 +472,7 @@
             this.MaximizeBox = false;
             this.Name = "Form1";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "HTC Flash Tool";
+            this.Text = "HTC Flash Tool v2.0.3";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);
             this.Load += new System.EventHandler(this.Form1_Load);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
