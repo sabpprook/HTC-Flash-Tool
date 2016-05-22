@@ -90,13 +90,13 @@
   <ItemGroup>
     <EmbeddedResource Include="Resources\adb.exe" />
     <EmbeddedResource Include="Resources\AdbWinApi.dll" />
-    <EmbeddedResource Include="Resources\mfastboot.exe" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\fastboot.exe" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="ICO.ico" />
+    <EmbeddedResource Include="Resources\mfastboot.exe" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.0">

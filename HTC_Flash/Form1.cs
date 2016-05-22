@@ -48,7 +48,7 @@ namespace HTC_Flash
 
             foreach (var str in data)
             {
-                if (!File.Exists(str))
+                if (!File.Exists(binDict + str))
                 {
                     using (FileStream fs = new FileStream(binDict + str, FileMode.OpenOrCreate, FileAccess.ReadWrite))
                     {
@@ -540,12 +540,12 @@ namespace HTC_Flash
 
         private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            Process.Start("https://drive.google.com/open?id=0B9_zSyS3dIRpa1VzQk0yNUdXd2M");
+            Process.Start(Encoding.ASCII.GetString(Convert.FromBase64String("aHR0cHM6Ly9kcml2ZS5nb29nbGUuY29tL29wZW4/aWQ9MEI5X3pTeVMzZElScGExVnpRazB5TlVkWGQyTQ==")));
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
-            Process.Start("https://www.facebook.com/profile.php?id=100005653172695");
+            Process.Start( Encoding.ASCII.GetString(Convert.FromBase64String("aHR0cHM6Ly93d3cuZmFjZWJvb2suY29tL3Byb2ZpbGUucGhwP2lkPTEwMDAwNTY1MzE3MjY5NQ==")));
         }
 
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
