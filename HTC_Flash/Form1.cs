@@ -18,6 +18,8 @@ namespace HTC_Flash
         List<string> Devices = new List<string>();
         string DeviceSN = "", DeviceMode = "";
         ProcessStartInfo psi = new ProcessStartInfo();
+        string binDict = Application.StartupPath + "\\bin\\";
+        string tmpDict = Path.GetTempPath();
 
         public Form1()
         {
@@ -27,18 +29,20 @@ namespace HTC_Flash
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            releaseData();
-            updateTimer.Start();
             psi.CreateNoWindow = true;
             psi.RedirectStandardOutput = true;
             psi.RedirectStandardError = true;
             psi.UseShellExecute = false;
-            psi.WorkingDirectory = Application.StartupPath;
+            psi.WorkingDirectory = binDict;
             psi.Verb = "runas";
+            releaseData();
+            updateTimer.Start();
         }
 
         private void releaseData()
         {
+            Directory.CreateDirectory(binDict);
+
             string[] data = { "adb.exe", "AdbWinApi.dll", "fastboot.exe", "mfastboot.exe" };
             Assembly asm = Assembly.GetExecutingAssembly();
 
@@ -46,12 +50,19 @@ namespace HTC_Flash
             {
                 if (!File.Exists(str))
                 {
-                    using (FileStream fs = new FileStream(str, FileMode.OpenOrCreate, FileAccess.ReadWrite))
+                    using (FileStream fs = new FileStream(binDict + str, FileMode.OpenOrCreate, FileAccess.ReadWrite))
                     {
                         asm.GetManifestResourceStream("HTC_Flash.Resources." + str).CopyTo(fs);
+                        fs.Close();
                     }
                 }
             }
+        }
+
+        private void updateTimer_Tick(object sender, EventArgs e)
+        {
+            if (!updateDevices.IsBusy)
+                updateDevices.RunWorkerAsync();
         }
 
         private void updateDevices_DoWork(object sender, DoWorkEventArgs e)
@@ -95,12 +106,6 @@ namespace HTC_Flash
                     updateDeviceInfo(DeviceSN, DeviceMode);
                 }
             }
-        }
-
-        private void updateTimer_Tick(object sender, EventArgs e)
-        {
-            if (!updateDevices.IsBusy)
-                updateDevices.RunWorkerAsync();
         }
 
         private void dataGridView1_CellMouseClick(object sender, DataGridViewCellMouseEventArgs e)
@@ -390,7 +395,7 @@ namespace HTC_Flash
         {
             Process p = new Process();
             p.StartInfo = psi;
-            p.StartInfo.FileName = "adb.exe";
+            p.StartInfo.FileName = binDict + "adb.exe";
             p.StartInfo.Arguments = parameters;
             p.Start();
             StreamReader sr = p.StandardOutput;
@@ -402,7 +407,7 @@ namespace HTC_Flash
         {
             Process p = new Process();
             p.StartInfo = psi;
-            p.StartInfo.FileName = "adb.exe";
+            p.StartInfo.FileName = binDict + "adb.exe";
             p.StartInfo.Arguments = parameters;
             p.OutputDataReceived += OutputDataReceived;
             p.ErrorDataReceived += ErrorDataReceived;
@@ -432,7 +437,7 @@ namespace HTC_Flash
         {
             Process p = new Process();
             p.StartInfo = psi;
-            p.StartInfo.FileName = "fastboot.exe";
+            p.StartInfo.FileName = binDict + "mfastboot.exe";
             p.StartInfo.Arguments = parameters;
             p.Start();
             StreamReader sr;
@@ -448,7 +453,7 @@ namespace HTC_Flash
         {
             Process p = new Process();
             p.StartInfo = psi;
-            p.StartInfo.FileName = "fastboot.exe";
+            p.StartInfo.FileName = binDict + "fastboot.exe";
             p.StartInfo.Arguments = parameters;
             p.ErrorDataReceived += ErrorDataReceived;
             p.Start();
@@ -458,10 +463,11 @@ namespace HTC_Flash
         public void mfastboot(string parameters)
         {
             Process p = new Process();
-            p.StartInfo.FileName = "mfastboot.exe";
+            p.StartInfo.FileName = binDict + "mfastboot.exe";
             p.StartInfo.Arguments = parameters;
             p.StartInfo.UseShellExecute = true;
-            p.StartInfo.WorkingDirectory = Application.StartupPath;
+            p.StartInfo.Verb = "runas";
+            p.StartInfo.WorkingDirectory = binDict;
             p.Start();
         }
 
@@ -546,10 +552,10 @@ namespace HTC_Flash
             p.StartInfo.Arguments = "/IM adb.exe /F";
             p.Start();
             Thread.Sleep(1000);
-            File.Delete("adb.exe");
-            File.Delete("AdbWinApi.dll");
-            File.Delete("fastboot.exe");
-            File.Delete("mfastboot.exe");
+            Directory.Delete(binDict, true);
+            string[] tmp = Directory.GetDirectories(tmpDict, "tmp*");
+            if (tmp.Length != 0)
+                foreach (string str in tmp) Directory.Delete(str, true);
         }
     }
 }

@@ -9,8 +9,8 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyDescription("HTC Flash Tool")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Mars3712")]
-[assembly: AssemblyProduct("HTC Flash Tool")]
-[assembly: AssemblyCopyright("Copyright ©  2016")]
+[assembly: AssemblyProduct("")]
+[assembly: AssemblyCopyright("Copyright © 2016 Mars3712. All rights reserved.")]
 [assembly: AssemblyTrademark("Mars3712")]
 [assembly: AssemblyCulture("")]
 
@@ -32,5 +32,5 @@ using System.Runtime.InteropServices;
 // 您可以指定所有的值，也可以依照以下的方式，使用 '*' 將組建和修訂編號
 // 指定為預設值: 
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("2.0.0.0")]
-[assembly: AssemblyFileVersion("2.0.0.0")]
+[assembly: AssemblyVersion("2.0.3.0")]
+[assembly: AssemblyFileVersion("2.0.3.0")]
