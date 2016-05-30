@@ -118,7 +118,7 @@ namespace HTC_Flash
         private void updateDeviceInfo(string SN, string mode)
         {
             string tmp, product="", imei="", version="", mid="", cid="";
-            if (mode.Equals("fastboot") || mode.Equals("download") || mode.Equals("ruu"))
+            if (mode.Contains("fastboot") || mode.Contains("download") || mode.Contains("ruu"))
             {
                 StreamReader sr = fastboot("-s " + SN + " getvar all");
                 while (!sr.EndOfStream)
@@ -145,7 +145,7 @@ namespace HTC_Flash
                     }
                 }
             }
-            else if (mode.Equals("adb") || mode.Equals("recovery"))
+            else if (mode.Contains("adb") || mode.Contains("recovery"))
             {
                 StreamReader sr = adb("-s " + SN + " shell getprop");
                 while (!sr.EndOfStream)
@@ -189,18 +189,18 @@ namespace HTC_Flash
             btn_getToken.Enabled = false;
             btn_flashToken.Enabled = false;
 
-            if (DeviceMode.Equals("fastboot") || DeviceMode.Equals("download") || DeviceMode.Equals("ruu") || DeviceMode.Equals("adb") || DeviceMode.Equals("recovery"))
+            if (DeviceMode.Contains("fastboot") || DeviceMode.Contains("download") || DeviceMode.Contains("ruu") || DeviceMode.Contains("adb") || DeviceMode.Contains("recovery"))
             {
                 btn_bootloader.Enabled = true;
                 btn_download.Enabled = true;
                 btn_reboot.Enabled = true;
                 btn_ruu.Enabled = true;
             }
-            if (DeviceMode.Equals("adb") || DeviceMode.Equals("recovery"))
+            if (DeviceMode.Contains("adb") || DeviceMode.Contains("recovery"))
             {
                 btn_recovery.Enabled = true;
             }
-            else if (DeviceMode.Equals("fastboot") || DeviceMode.Equals("download"))
+            else if (DeviceMode.Contains("fastboot") || DeviceMode.Contains("download"))
             {
 
                 btn_getToken.Enabled = true;
@@ -209,7 +209,7 @@ namespace HTC_Flash
                 btn_FlashRecovery.Enabled = true;
                 btn_FlashSystem.Enabled = true;
             }
-            else if (DeviceMode.Equals("ruu") || DeviceMode.Equals("sideload"))
+            else if (DeviceMode.Contains("ruu") || DeviceMode.Contains("sideload"))
             {
                 btn_FlashZip.Enabled = true;
             }
@@ -218,49 +218,49 @@ namespace HTC_Flash
         private void btn_bootloader_Click(object sender, EventArgs e)
         {
             textBox1.AppendText("[HFT]: Reboot to bootloader mode...\r\n");
-            if (DeviceMode.Equals("fastboot") || DeviceMode.Equals("download") || DeviceMode.Equals("ruu"))
+            if (DeviceMode.Contains("fastboot") || DeviceMode.Contains("download") || DeviceMode.Contains("ruu"))
                 fastboot("-s " + DeviceSN + " reboot-bootloader");
-            else if (DeviceMode.Equals("adb") || DeviceMode.Equals("recovery"))
+            else if (DeviceMode.Contains("adb") || DeviceMode.Contains("recovery"))
                 adb("-s " + DeviceSN + " reboot bootloader");
         }
 
         private void btn_download_Click(object sender, EventArgs e)
         {
             textBox1.AppendText("[HFT]: Reboot to download mode...\r\n");
-            if (DeviceMode.Equals("fastboot") || DeviceMode.Equals("download") || DeviceMode.Equals("ruu"))
+            if (DeviceMode.Contains("fastboot") || DeviceMode.Contains("download") || DeviceMode.Contains("ruu"))
                 fastboot("-s " + DeviceSN + " oem reboot-download");
-            else if (DeviceMode.Equals("adb") || DeviceMode.Equals("recovery"))
+            else if (DeviceMode.Contains("adb") || DeviceMode.Contains("recovery"))
                 adb("-s " + DeviceSN + " reboot download");
         }
 
         private void btn_recovery_Click(object sender, EventArgs e)
         {
             textBox1.AppendText("[HFT]: Reboot to recovery...\r\n");
-            if (DeviceMode.Equals("adb") || DeviceMode.Equals("recovery"))
+            if (DeviceMode.Contains("adb") || DeviceMode.Contains("recovery"))
                 adb("-s " + DeviceSN + " reboot recovery");
         }
 
         private void btn_ruu_Click(object sender, EventArgs e)
         {
             textBox1.AppendText("[HFT]: Reboot to RUU mode...\r\n");
-            if (DeviceMode.Equals("fastboot") || DeviceMode.Equals("download") || DeviceMode.Equals("ruu"))
+            if (DeviceMode.Contains("fastboot") || DeviceMode.Contains("download") || DeviceMode.Contains("ruu"))
                 fastboot("-s " + DeviceSN + " oem rebootRUU");
-            else if (DeviceMode.Equals("adb") || DeviceMode.Equals("recovery"))
+            else if (DeviceMode.Contains("adb") || DeviceMode.Contains("recovery"))
                 adb("-s " + DeviceSN + " reboot oem-78");
         }
 
         private void btn_reboot_Click(object sender, EventArgs e)
         {
             textBox1.AppendText("[HFT]: Reboot...\r\n");
-            if (DeviceMode.Equals("fastboot") || DeviceMode.Equals("download") || DeviceMode.Equals("ruu"))
+            if (DeviceMode.Contains("fastboot") || DeviceMode.Contains("download") || DeviceMode.Contains("ruu"))
                 fastboot("-s " + DeviceSN + " reboot");
-            else if (DeviceMode.Equals("adb") || DeviceMode.Equals("recovery"))
+            else if (DeviceMode.Contains("adb") || DeviceMode.Contains("recovery"))
                 adb("-s " + DeviceSN + " reboot");
         }
 
         private void btn_getToken_Click(object sender, EventArgs e)
         {
-            if (DeviceMode.Equals("fastboot") || DeviceMode.Equals("download"))
+            if (DeviceMode.Contains("fastboot") || DeviceMode.Contains("download"))
             {
                 StreamReader sr = fastboot("-s " + DeviceSN + " oem get_identifier_token");
                 string tmp, token="";
@@ -331,7 +331,7 @@ namespace HTC_Flash
             if (openFileDialog1.ShowDialog() == DialogResult.OK)
             {
                 textBox1.AppendText("[HFT]: Flashing System Image...\r\n");
-                if (DeviceMode.Equals("download"))
+                if (DeviceMode.Contains("download"))
                 {
                     Thread th = new Thread(() => fastboot2("-s " + DeviceSN + " flash system " + openFileDialog1.FileName));
                     th.Start();
@@ -350,9 +350,9 @@ namespace HTC_Flash
             if (openFileDialog1.ShowDialog() == DialogResult.OK)
             {
                 textBox1.AppendText("[HFT]: Flashing Zip...\r\n");
-                if (DeviceMode.Equals("ruu") || DeviceMode.Equals("sideload"))
+                if (DeviceMode.Contains("ruu") || DeviceMode.Contains("sideload"))
                 {
-                    if (DeviceMode.Equals("ruu"))
+                    if (DeviceMode.Contains("ruu"))
                     {
                         Thread th = new Thread(() => fastboot2("-s " + DeviceSN + " flash zip " + openFileDialog1.FileName));
                         th.Start();
