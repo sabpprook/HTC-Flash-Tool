@@ -8,10 +8,10 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("HTC Flash Tool")]
 [assembly: AssemblyDescription("HTC Flash Tool")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Mars3712")]
-[assembly: AssemblyProduct("")]
+[assembly: AssemblyCompany("")]
+[assembly: AssemblyProduct("HTC_Flash")]
 [assembly: AssemblyCopyright("Copyright © 2016 Mars3712. All rights reserved.")]
-[assembly: AssemblyTrademark("Mars3712")]
+[assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
 // 將 ComVisible 設定為 false 會使得這個組件中的類型
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // 下列 GUID 為專案公開 (Expose) 至 COM 時所要使用的 typelib ID
-[assembly: Guid("246d5f06-acc8-402b-8db2-2fbeba42ef84")]
+[assembly: Guid("3839334e-3bff-4b23-88a7-8977b68d4a3a")]
 
 // 組件的版本資訊是由下列四項值構成: 
 //
@@ -32,5 +32,5 @@ using System.Runtime.InteropServices;
 // 您可以指定所有的值，也可以依照以下的方式，使用 '*' 將組建和修訂編號
 // 指定為預設值: 
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("2.0.5.0")]
-[assembly: AssemblyFileVersion("2.0.5.0")]
+[assembly: AssemblyVersion("2.1.0.0")]
+[assembly: AssemblyFileVersion("2.1.0.0")]
