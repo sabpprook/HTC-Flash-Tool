@@ -17,6 +17,7 @@ namespace HTC_Flash
         public string deviceMode { get; set; }
         ProcessStartInfo psi = new ProcessStartInfo();
         string binDict = Path.GetTempPath() + "\\bin\\";
+        bool isInit = false;
 
         public Picture()
         {
@@ -39,6 +40,8 @@ namespace HTC_Flash
             label2.Text = "Mode: " + deviceMode;
             if (!string.IsNullOrEmpty(deviceSN) && !string.IsNullOrEmpty(deviceMode) && (deviceMode.Equals("adb") || deviceMode.Equals("recovery")))
             {
+                if (!isInit)
+                    deviceInit();
                 button1.Enabled = true;
                 checkBox1.Enabled = true;
             }
@@ -48,11 +51,13 @@ namespace HTC_Flash
                 checkBox1.Checked = false;
                 checkBox1.Enabled = false;
                 pictureBox1.Image = null;
+                isInit = false;
             }
         }
 
         private void deviceInit()
         {
+            isInit = true;
             pushfb2png();
             chmodfb2png();
         }
